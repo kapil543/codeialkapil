@@ -1,4 +1,7 @@
 module.exports.home=function(req,res){
-    return res.end("<h1>Express is up for codeial!</h1>");
-};
-module.exports.function_name=function(req,res){return res.end("<h1>manisha</h1>")};
+    // return res.end("<h1>Express is up for codeial!</h1>");
+    return res.render("home",{
+        title:"Home",
+    });
+}
+// module.exports.function_name=function(req,res){return res.end("<h1>manisha</h1>")};
