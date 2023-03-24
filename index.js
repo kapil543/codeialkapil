@@ -1,10 +1,15 @@
 const express=require("express");
+const cookieParser = require("cookie-parser");
 const app=express();
 const port=8000;
 //use mongodb
 const db=require('./config/mongoose.js');
+app.use(express.urlencoded());
+app.use(cookieParser());
+
 // note:use layout before route
 const expressLayouts=require("express-ejs-layouts");
+ 
 app.use(expressLayouts);
  
 // note:use static-file before route
