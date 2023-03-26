@@ -1,0 +1,17 @@
+header{
+    div{
+        padding: 0% 1%;
+        display: flex;
+        height:90px;
+        justify-content: space-between;
+        background-color: rgb(64, 195, 49);
+        div{
+            display: flex;
+            justify-content: space-between;
+            font-size: large;
+            list-style: none;
+            color: aliceblue;
+            width: 250px;
+        }
+    }
+}
