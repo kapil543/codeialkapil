@@ -7,5 +7,6 @@ router.use("/users",require("./users"));
 // for any further routes ,access from here
 // router.use("/routerName",require("./routerFile"))
 router.use("/posts",require("./posts"));
+router.use("/comments",require("./comments"));
 console.log("loaded router");
 module.exports=router;      
