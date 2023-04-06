@@ -4,18 +4,29 @@ module.exports.create=async function(req,res){
     try{
         const post=await Post.findById(req.body.post);
         if(post){
-           const comment=await Comment.create({
+            let comment=await Comment.create({
                 content:req.body.content,
                 post:req.body.post,
                 user:req.user._id
             });
             await post.comments.push(comment);
             await post.save();
-
+            if(req.xhr){
+                // Similar for comments to fetch the user's id!
+                comment=await comment.populate('user','name');
+                
+                return res.status(200).json({
+                    data:{
+                        comment:comment
+                    },
+                    message:"Post created!"
+                })
+            }
+            req.flash('success',"Comment published  successfully!");
             res.redirect('/');
         }
     }catch(err){
-        console.log('error in creating comment on post');
+        console.log('error in creating comment on post:',err);
     }
 };
 module.exports.destroy=async function(req,res){
@@ -26,7 +37,18 @@ module.exports.destroy=async function(req,res){
         if(comment.user==req.user.id){
           let postId=comment.post;
           await Comment.deleteOne({_id:comment._id});
-          await Post.findByIdAndUpdate(postId,{$pull:{comments:req.params.id}});
+          let post=await Post.findByIdAndUpdate(postId,{$pull:{comments:req.params.id}});
+          
+          //send the comment id which was deleted back to the views
+          if(req.xhr){
+            return res.status(200).json({
+                data:{
+                    comment_id:req.params.id 
+                },
+                message:'Post deleted'
+            });
+          }
+          req.flash('success','Comment deleted!');
           return res.redirect('back');
         }else{
             return res.redirect('back');

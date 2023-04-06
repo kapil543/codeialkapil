@@ -8,6 +8,7 @@ module.exports.home= async function(req,res){
     // res.cookie(11,'s');
     try{
          const posts=await Post.find({})
+        .sort('-createdAt')
         .populate('user')
         .populate({
              
