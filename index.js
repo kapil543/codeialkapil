@@ -8,6 +8,8 @@ const db=require('./config/mongoose.js');
 const session=require('express-session');
 const passport=require('passport');
 const passportLocal=require('./config/passport-local-strategy');
+const passportJWT=require('./config/passport-jwt-strategy');
+const passportGoogle=require('./config/passport-google-oauth2-strategy.js');
 const MongoStore=require('connect-mongo');
 const flash=require('connect-flash');
 const customMware=require('./config/middleware');
@@ -17,7 +19,7 @@ app.use(cookieParser());
 
 // note:use layout before route
 const expressLayouts=require("express-ejs-layouts");
- 
+
 app.use(expressLayouts);
  
 // note:use static-file before route
