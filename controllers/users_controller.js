@@ -1,7 +1,13 @@
  const { findById } = require('../models/post');
 const User=require('../models/user');
+const Crypto=require('crypto');
+const resetPassword=require('../models/reset_password_token');
 const fs=require('fs');
 const path=require('path');
+const commmentMailer=require('../mailers/reset_password_mailer');
+const commentEmailWorker=require('../workers/reset_password_worker');
+const queue=require('../config/kue'); 
+
 
  module.exports.profile= async function(req,res){
     const user=await User.findById(req.params.id);
@@ -103,6 +109,96 @@ module.exports.createSession=function(req,res){
 return res.redirect('/');
 
 };
+//  forget password
+module.exports.forgetPassword=function(req,res){
+   console.log ("forget Password"); 
+
+   req.flash('success','Forget Password');
+   return res.render("user_forget_password",{
+      title:'User profile'
+    });
+};
+//find user by email for sending reset password link
+module.exports.resetPasswordEmail=async (req,res)=>{
+   try{
+      console.log(req.body.email);
+      const findUserEmail=await User.findOne({email:req.body.email});
+      // console.log(findUserEmail);
+      if(findUserEmail){
+         const token= Crypto.randomBytes(20).toString('hex');
+         console.log(token);
+         const resetToken= await resetPassword.create({
+            user:findUserEmail._id,
+            accessToken:token
+         });
+         console.log(resetToken);
+         const resetUrl=`http://localhost:8000/users/reset-password/${token}`;
+
+         let data={
+            resetUrl:resetUrl,
+            email:req.body.email
+         }
+         let job=await queue.create('emails', data ).save(function(err){
+            if(err){
+                console.log(err);
+            };
+            console.log('job enqueued',job.id);
+        })
+               
+               req.flash('success',' Email user found');
+               console.log(findUserEmail)
+            return res.redirect("back");
+      }else{
+            req.flash('error',' Email not found');
+            return res.redirect("back");
+      }
+   }catch(error){
+      console.log('err in finding user in reset password:',error);
+      return res.redirect("back");
+   }
+};
+//  reset password form page for new password
+module.exports.resetPassword=function(req,res){
+   console.log ("Reset Password"); 
+
+   // req.flash('success','Reset Password');
+   return res.render("user_reset_password",{
+      title:'User profile',
+      token: req.params.token
+    });
+};
+// complete reset password by submiting form
+module.exports.resetPasswordComplete= async function(req,res){
+   try{
+      const userToken=await resetPassword.findOne({accessToken:req.params.token});
+      if(userToken){
+         // if(userToken.isValid){
+            if(req.body.password==req.body.confirm_password){
+               let user=await User.findByIdAndUpdate(userToken.user,req.body);
+               user.save()
+            }else{
+               req.flash('error'," password is not equal to confirm_password");
+               return res.redirect("back");
+            }
+            // delete token after reseting password
+            await resetPassword.findOneAndDelete({accessToken:req.params.token});
+            return res.redirect("/");
+         // }else{
+         //    console.log("Reset link is expired ");
+         //    req.flash('error',"Reset link is expired ");
+         //    return res.redirect("back");
+         // }
+      }else{
+         req.flash('error'," Token is not found ");
+         return res.redirect("back");
+      }
+       
+   }catch(err){
+      console.log('err in reseting password:',error);
+      return res.redirect("back");
+   }
+};
+
 module.exports.destroySession=function (req,res,next){
     req.logout(function(err) {
       if (err) { return next(err); }
