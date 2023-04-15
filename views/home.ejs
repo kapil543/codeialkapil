@@ -16,16 +16,53 @@
         <%}%>
       </ul>
     </div>
-  </section> 
-  <section id="user-friends">
-    <h2>Friends</h2>
-    <%for(u of all_users){%>
-      <p>
-        <a href="users/profile/<%=u.id%>"><%=u.name%></a>
-      </p>
+  </section>
+  <section id="friends-and-users">
+    <%if(locals.user){ %>
+    <div id="all-friends">
+      <h2>Friends</h2>
+      <%for(u of all_friends){%>
+          <br>
+          <p>
+            <a href="users/profile/<%=u.id%>"><%=u.name%></a>
+          </p>
+          <br>
+          <a class="toggle-friendship-button" data-friendships="<%=locals.user.friendships.length%>" href="/users/friendship/?id=<%=u._id%> ">
+          Remove Friend
+          </a>
+        
+      <%}%>
+    </div> 
     <%}%>
-  </section> 
+
+    <div id="all-users">
+      <h2>Users</h2>
+      <%for(u of all_users){%>
+        <p>
+          <a href="users/profile/<%=u.id%>"><%=u.name%></a>
+        </p>
+      <%}%>
+    </div>
+</section> 
+<%-include('_chat_box')-%>
 </div> 
+<!-- importing this script for creating the comments -->
 <script src="/js/home_post_comments.js"></script>        
 <script src="/js/home_posts.js"></script>        
-     
+<!-- import the script file for toggle likes,also run it over for the already present posts and comments on the page-->
+<script src="/js/toggle_likes.js"></script>
+<script>
+    $('.toggle-like-button').each(function(){
+      let self=this;
+      let toggleLike= new ToggleLike(self);
+    });
+</script>
+<!-- import the script file for toggle friends for already present user on the page-->
+<script src="/js/toggle_friends.js"></script>
+<script>
+    $('.toggle-friendship-button').each(function(){
+      let self=this;
+      let toggleFriendship= new ToggleFriendship(self);
+    });
+</script>
+ 

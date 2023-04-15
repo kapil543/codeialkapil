@@ -3,7 +3,7 @@ const nodeMailer=require('../config/nodemailer');
 // this is another way of exporting a mothod
 
 exports.resetPassword=async function(data){
-    console.log('inside newcomment mailer');
+    console.log('inside newpassword mailer');
     try{
         let htmlString=await nodeMailer.renderTemplate({resetUrl:data.resetUrl},'/password/reset_password.ejs');
 

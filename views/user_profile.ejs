@@ -12,4 +12,43 @@
     <!-- else show only the profile info  -->
     <p><%=profile_user.name%></p>
     <p><%=profile_user.email%></p>
+    <!-- toggle button for friendship -->
+    <br>
+    <small>
+        <!-- <%if(locals.user){%> -->
+            <%=profile_user.friendships.length%> Friends
+            <br>
+            <%if(friendship){%>
+                <br>
+            <a class="toggle-friendship-button" data-friendships="<%=profile_user.friendships.length%>" href="../friendship/?id=<%=profile_user._id%> ">
+            Remove Friend
+            </a>
+           <% }else{%>
+            <br>
+            <a class="toggle-friendship-button" data-friendships="<%=profile_user.friendships.length%>" href="../friendship/?id=<%=profile_user._id%> ">
+            Add Friend
+            </a>
+            <%}%>
+        <!-- <%}else{%>
+            <%=profile_user.friendships.length%> Friends
+        <%}%> -->
+    </small>
 <%}%>
+
+<!-- import the script file for toggle friends for already present user on the page-->
+<script src="/js/toggle_friends.js"></script>
+<script>
+    $('.toggle-friendship-button').each(function(){
+      let self=this;
+      let toggleFriendship= new ToggleFriendship(self);
+       
+
+    });
+</script>
+<!-- <script>
+    $('.toggle-friendship-button').each(function(){
+      let self=this;
+
+    //   let toggleFriendship= new ToggleFriendship(self);
+    });
+</script> -->
