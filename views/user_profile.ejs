@@ -16,7 +16,7 @@
     <br>
     <small>
         <!-- <%if(locals.user){%> -->
-            <%=profile_user.friendships.length%> Friends
+            <h4 id="friend"><%=profile_user.friendships.length%> Friends</h4> 
             <br>
             <%if(friendship){%>
                 <br>
@@ -34,21 +34,12 @@
         <%}%> -->
     </small>
 <%}%>
-
 <!-- import the script file for toggle friends for already present user on the page-->
-<script src="/js/toggle_friends.js"></script>
+<script src="<%=assetPath('js/toggle_friends.js')%>"></script>
 <script>
     $('.toggle-friendship-button').each(function(){
       let self=this;
       let toggleFriendship= new ToggleFriendship(self);
-       
-
     });
 </script>
-<!-- <script>
-    $('.toggle-friendship-button').each(function(){
-      let self=this;
-
-    //   let toggleFriendship= new ToggleFriendship(self);
-    });
-</script> -->
+ 

@@ -5,7 +5,6 @@ class ToggleFriendship{
         this.toggler=toggleElement;
         // assign a function to the element
         this.toggleFriendship();
-        this.checkFriendship();
     }
      
     toggleFriendship(){ 
@@ -24,12 +23,14 @@ class ToggleFriendship{
                 if(data.data.deleted==true){
                     friendsCount-=1;
                     $(self).html(`Add Friend`);
+                    $(`#friend`).html(`${friendsCount} Friends`);
                 }else{
                     friendsCount+=1;
                     $(self).html(`Remove Friend`);
+                    $(`#friend`).html(`${friendsCount} Friends`);
                 }
 
-                $(self).attr('data-likes',friendsCount);
+                $(self).attr('data-friendships',friendsCount);
             })
             .fail(function(errData){
                 console.log('error in completing the request');

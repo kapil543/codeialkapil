@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="/css/home.css">
+<link rel="stylesheet" href="<%=assetPath('css/home.css')%>">
 <div id="home-container">
   <section id="feed-posts">
     <h4>Posts</h4>
@@ -44,13 +44,13 @@
       <%}%>
     </div>
 </section> 
-<%-include('_chat_box')-%>
+<%-include('_chat_box')%>
 </div> 
 <!-- importing this script for creating the comments -->
-<script src="/js/home_post_comments.js"></script>        
-<script src="/js/home_posts.js"></script>        
+<script src="<%=assetPath('js/home_post_comments.js')%>"></script>        
+<script src="<%=assetPath('js/home_posts.js')%> "></script>        
 <!-- import the script file for toggle likes,also run it over for the already present posts and comments on the page-->
-<script src="/js/toggle_likes.js"></script>
+<script src="<%=assetPath('js/toggle_likes.js')%> " ></script>
 <script>
     $('.toggle-like-button').each(function(){
       let self=this;
@@ -58,11 +58,27 @@
     });
 </script>
 <!-- import the script file for toggle friends for already present user on the page-->
-<script src="/js/toggle_friends.js"></script>
+<script src="<%=assetPath('js/toggle_friends.js')%> "></script>
 <script>
     $('.toggle-friendship-button').each(function(){
       let self=this;
       let toggleFriendship= new ToggleFriendship(self);
     });
 </script>
+<!-- import the script file for socket.io  for  chating on the page-->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script> -->
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.3/socket.io.js"
+  integrity="sha512-iWPnCISAd/J+ZacwV2mbNLCaPGRrRo5OS81lKTVPtRg1wGTC20Cfmp5Us5RcbLv42QLdbAWl0MI57yox5VecQg=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<script src="<%=assetPath('js/chat_engine.js')%> "></script>
+<%if(locals.user){%>
+  <script>
+    new ChatEngine('user-chat-box','<%=locals.user.email%>')
+  </script>
+<%}%>
+
+<script src="<%=assetPath('js/chat_box.js')%>"></script>
  
